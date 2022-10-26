@@ -5,7 +5,7 @@ import AppIndex from "./AppIndex";
 export const StoreContext = React.createContext({});
 function App() {
   return (
-    <StoreContext.Provider value={{}}>
+    <StoreContext.Provider>
       <AppIndex />
     </StoreContext.Provider>
   );

@@ -10,11 +10,6 @@ function Join() {
   //   전화번호: ,
   // });
   const navigation = useNavigate();
-  // const 회원정보가져오기 = async () => {
-  //   await axios({
-  //     url: "http://localhost:5000/login",
-  //   });
-  // };
 
   return (
     <div className="main-div">
@@ -48,7 +43,6 @@ function Join() {
           className="btn-a"
           onClick={() => {
             navigation("/");
-            // 회원정보가져오기();
           }}
         >
           회원가입

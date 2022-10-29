@@ -34,7 +34,7 @@ DB.add("project", {
 
 app.get("/login", async (req, res) => {
   // console.log(data);
-  res.send("data");
+  res.send(데이터가저오기);
 });
 
 app.get("/", function (req, res) {

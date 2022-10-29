@@ -3,12 +3,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Join() {
-  // const [join,setJoin] = React.useState({
-  //   아이디:  ,
-  //   비밀번호 : ,
-  //   이름 : ,
-  //   전화번호: ,
-  // });
+  const [join, setJoin] = React.useState({
+    아이디: "",
+    비밀번호: "",
+    이름: "",
+    전화번호: "",
+  });
   const navigation = useNavigate();
 
   return (

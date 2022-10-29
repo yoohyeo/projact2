@@ -1,13 +1,31 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { StoreContext } from "../App";
 
 function Login() {
-  const [login, SetLogin] = React.useState({});
-  const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState({
+    id: "",
+    pw: "",
+  });
+  const { loginUser, setLoginUser } = React.useContext(StoreContext);
+  // console.log(loginUser);
 
+  const 로그인 = async () => {
+    await axios({
+      url: "http://localhost:5000/login",
+      params: {
+        user: user,
+      },
+    }).then(({ data }) => {
+      // console.log(data);
+
+      setLoginUser(data.user);
+      localStorage.setItem("loginUser", JSON.stringify(data.user));
+      navigation("/main");
+    });
+  };
   const navigation = useNavigate();
-
   return (
     <div className="main-div">
       <div className="main-login">
@@ -16,6 +34,11 @@ function Login() {
           <input
             className="input-text"
             type="text"
+            onChange={(event) => {
+              const cloneuser = { ...user };
+              cloneuser.id = event.target.value;
+              setUser(cloneuser);
+            }}
             placeholder="당신의 ID를 입력해주세요."
           />
         </div>
@@ -24,10 +47,17 @@ function Login() {
           <input
             className="input-text"
             type="password"
+            onChange={(event) => {
+              const cloneuser = { ...user };
+              cloneuser.pw = event.target.value;
+              setUser(cloneuser);
+            }}
             placeholder="당신의 PW를 입력해주세요."
           />
         </div>
-        <button className="btn">login</button>
+        <button className="btn" onClick={로그인}>
+          login
+        </button>
         <button
           className="btn-a"
           onClick={() => {

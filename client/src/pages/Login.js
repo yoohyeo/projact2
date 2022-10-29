@@ -1,8 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function Main() {
+function Login() {
+  const [login, SetLogin] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
+
   const navigation = useNavigate();
+
   return (
     <div className="main-div">
       <div className="main-login">
@@ -31,10 +36,17 @@ function Main() {
         >
           회원가입
         </button>
-        <button className="btn-a">ID,PW 찾기</button>
+        <button
+          className="btn-a"
+          onClick={() => {
+            navigation("/find");
+          }}
+        >
+          ID,PW 찾기
+        </button>
       </div>
     </div>
   );
 }
 
-export default Main;
+export default Login;

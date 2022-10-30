@@ -6,7 +6,7 @@ function Main() {
   const { loginUser, setLoginUser } = React.useContext(StoreContext);
   const navigation = useNavigate();
   React.useEffect(() => {
-    console.log(loginUser);
+    // console.log(loginUser);
   }, [loginUser]);
 
   return (

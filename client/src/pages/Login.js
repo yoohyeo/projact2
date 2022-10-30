@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { StoreContext } from "../App";
 
+axios.defaults.withCredentials = true;
+
 function Login() {
   const [user, setUser] = React.useState({
     id: "",
@@ -13,16 +15,21 @@ function Login() {
 
   const 로그인 = async () => {
     await axios({
-      url: "http://localhost:5000/login",
+      url: "http://localhost:4000/login",
       params: {
         user: user,
       },
     }).then(({ data }) => {
-      // console.log(data);
+      console.log(data);
 
       setLoginUser(data.user);
-      localStorage.setItem("loginUser", JSON.stringify(data.user));
-      navigation("/main");
+      // localStorage.setItem("loginUser", JSON.stringify(data.user));
+      if (data.code === "success") {
+        navigation("/main");
+      } else {
+        alert(data.message);
+        navigation("/");
+      }
     });
   };
   const navigation = useNavigate();

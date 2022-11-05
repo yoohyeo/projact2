@@ -14,7 +14,7 @@ app.use(
   session({
     secret: "sadwqdwqwdqw",
     resave: false,
-    saveUninitialize: true,
+    saveUninitialize: false,
   })
 );
 
@@ -47,6 +47,8 @@ async function 디비실행(params) {
 
         resolve(data);
       });
+
+      connection.release();
     });
   });
   return data;
@@ -105,25 +107,25 @@ app.get("/login", async (req, res) => {
     res.send(result);
   }
 });
+app.get("/autoLogin", (req, res) => {
+  res.send(req.session.loginUser);
+});
+
 app.get("/join", async (req, res) => {
   const data = await 디비실행({
     database: "project",
     query: "SELECT * FROM user",
   });
-  // console.log(req.query);
   const join = req.query;
   const id = join.id;
   const pw = join.pw;
   const name = join.name;
   const phoneNumber = join.phoneNumber;
-  // console.log(phoneNumber);
   const result = {
     code: "success",
     message: "회원가입이 되었습니다",
   };
-  // console.log(data);
   data.forEach(async (item) => {
-    // console.log(item);
     if (item.id === id) {
       result.code = "fail";
       result.message = "중복아이디 입니다.";
@@ -148,12 +150,39 @@ app.get("/join", async (req, res) => {
       phonenumber: phoneNumber,
     },
   });
-  // await 디비실행({
-  //   query: insert,
-  //   database: "project",
-  // });
 
   res.send(result);
+});
+app.get("/find", async function (req, res) {
+  const data = await 디비실행({
+    database: "project",
+    query: "SELECT * FROM user",
+  });
+  const { find } = req.query;
+  const name = find.name;
+  const phoneNumber = find.phoneNumber;
+  const result = {
+    id: "",
+    pw: "",
+    answer: "",
+  };
+  data.forEach((item) => {
+    if (item.name === name && item.phonenumber === phoneNumber) {
+      result.id = item.id;
+      result.pw = item.pw;
+      result.answer = `당신의 아이디 : ${result.id}, 비밀번호 ${result.pw}입니다`;
+    } else {
+      result.answer = "유효한 정보를 찾지 못했습니다.";
+    }
+  });
+  res.send(result);
+});
+app.get("/main", async function (req, res) {
+  const data = await 디비실행({
+    database: "project",
+    query: "SELECT * FROM diary",
+  });
+  res.send(data);
 });
 
 app.get("/", function (req, res) {

@@ -12,7 +12,7 @@ function Login() {
   });
   const { loginUser, setLoginUser } = React.useContext(StoreContext);
   // console.log(loginUser);
-
+  const navigation = useNavigate();
   const 로그인 = async () => {
     await axios({
       url: "http://localhost:4000/login",
@@ -20,7 +20,7 @@ function Login() {
         user: user,
       },
     }).then(({ data }) => {
-      console.log(data);
+      // console.log(data);
 
       setLoginUser(data.user);
       // localStorage.setItem("loginUser", JSON.stringify(data.user));
@@ -32,7 +32,7 @@ function Login() {
       }
     });
   };
-  const navigation = useNavigate();
+
   return (
     <div className="main-div">
       <div className="main-login">

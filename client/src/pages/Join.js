@@ -9,9 +9,19 @@ function Join() {
     name: "",
     phoneNumber: "",
   });
+  const [checkPw, setCheckPw] = React.useState({
+    pw: "",
+    checkPw: "",
+  });
+
+  // console.log(checkPw);
+
   const navigation = useNavigate();
   const 확인 = async () => {
-    console.log(join);
+    if (checkPw.pw !== checkPw.checkPw) {
+      alert("비밀번호를 다시 확인해주세요");
+      return;
+    }
     await axios({
       url: "http://localhost:4000/join",
       params: join,
@@ -47,15 +57,26 @@ function Join() {
           type="password"
           onChange={(event) => {
             const cloneJoin = { ...join };
+            const clonepw = { ...checkPw };
             cloneJoin.pw = event.target.value;
+            clonepw.pw = event.target.value;
             setJoin(cloneJoin);
+            setCheckPw(clonepw);
           }}
         />
 
         <h3>
           <label>비밀번호 재확인</label>
         </h3>
-        <input className="input-text" type="password" />
+        <input
+          className="input-text"
+          type="password"
+          onChange={(event) => {
+            const clonePw = { ...checkPw };
+            clonePw.checkPw = event.target.value;
+            setCheckPw(clonePw);
+          }}
+        />
         {/* <span className="ckecked-pw">비밀번호를 다시확인해주세요.</span> */}
         <h3>
           <label>이름</label>

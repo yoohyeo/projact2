@@ -14,6 +14,10 @@ li {
   list-style: none;
   color: inherit;
 }
+body {
+  background-color: #a6c0d5;
+}
+
 .main-div {
   display: flex;
   flex-direction: row;
@@ -22,7 +26,6 @@ li {
   height: 100vh;
   width: 100%;
   margin: 0px auto;
-  background-color: #a6c0d5;
 }
 .main-login {
   padding: 16px;
@@ -55,6 +58,20 @@ li {
   border-radius: 4px;
   cursor: pointer;
 }
-.ckecked-pw {
-  color: red;
+
+.tg {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.tg td {
+  border-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+  padding: 10px 5px;
+  word-break: normal;
+  text-align: center;
+  cursor: pointer;
 }

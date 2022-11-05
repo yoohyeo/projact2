@@ -27,22 +27,10 @@ function App() {
       navigation("/main");
     });
   };
-  // const { pathname } = useLocation();
-  // const 주소유효성검증 = () => {
-  //   const 로그인했을때비접근주소 = ["join", "", "find"];
-  //   const 주소 = pathname.slice(1);
-  //   console.log(주소);
 
-  //   if (로그인했을때비접근주소.includes(주소) && loginUser.id !== "") {
-  //     navigation("/main");
-  //   }
-  // };
   React.useEffect(() => {
     자동로그인();
   }, []);
-  // React.useEffect(() => {
-  //   주소유효성검증();
-  // }, [loginUser]);
 
   return (
     <StoreContext.Provider

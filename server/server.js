@@ -18,10 +18,6 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   next();
-// });
-
 const DB = mysql.createPoolCluster();
 
 DB.add("project", {
@@ -53,7 +49,18 @@ async function 디비실행(params) {
   });
   return data;
 }
+function 인서트만들기({ table, data }) {
+  const column = Object.keys(data);
+  const values = Object.values(data);
 
+  if (column.length !== values.length)
+    return throwError("Error Object Key Value");
+
+  const c = column.join(",");
+  const v = values.join("','");
+
+  return `INSERT INTO ${table}(${c}) VALUES ('${v}')`;
+}
 app.get("/autoLogin", (req, res) => {
   res.send(req.session.loginUser);
 });
@@ -107,9 +114,6 @@ app.get("/login", async (req, res) => {
     res.send(result);
   }
 });
-app.get("/autoLogin", (req, res) => {
-  res.send(req.session.loginUser);
-});
 
 app.get("/join", async (req, res) => {
   const data = await 디비실행({
@@ -117,6 +121,7 @@ app.get("/join", async (req, res) => {
     query: "SELECT * FROM user",
   });
   const join = req.query;
+
   const id = join.id;
   const pw = join.pw;
   const name = join.name;
@@ -150,7 +155,14 @@ app.get("/join", async (req, res) => {
       phonenumber: phoneNumber,
     },
   });
-
+  /**
+   * 아주 중요 없애지 말것(Mysql로 데이터 보내기)
+   *  
+   await 디비실행({
+     query: insert,
+     database: "project",
+   });
+  */
   res.send(result);
 });
 app.get("/find", async function (req, res) {
@@ -164,27 +176,68 @@ app.get("/find", async function (req, res) {
   const result = {
     id: "",
     pw: "",
-    answer: "",
+    answer: "유효한 정보를 찾지 못했습니다.",
   };
-  data.forEach((item) => {
+
+  data.map((item) => {
     if (item.name === name && item.phonenumber === phoneNumber) {
       result.id = item.id;
       result.pw = item.pw;
       result.answer = `당신의 아이디 : ${result.id}, 비밀번호 ${result.pw}입니다`;
-    } else {
-      result.answer = "유효한 정보를 찾지 못했습니다.";
+      return result;
     }
+    return result;
   });
+
   res.send(result);
 });
 app.get("/main", async function (req, res) {
+  const loginUser = req.session.loginUser;
+
+  // console.log(loginUser);
+
+  let sql = `SELECT * FROM diary WHERE userid = '${loginUser.id}' `;
+
+  if (loginUser.seq === 1) {
+    sql = "SELECT * FROM diary";
+  }
+
+  // console.log(sql);
+
   const data = await 디비실행({
     database: "project",
-    query: "SELECT * FROM diary",
+    query: sql,
   });
   res.send(data);
 });
-
+app.get("/write", async function (req, res) {
+  const data = await 디비실행({
+    database: "project",
+    query: "SELECT * FROM DIARY",
+  });
+  const { write } = req.query;
+  const title = write.title;
+  const content = write.content;
+  const userId = write.userId;
+  const user = write.user;
+  const insert = 인서트만들기({
+    table: "DIARY",
+    data: {
+      title: title,
+      content: content,
+      user: user,
+      userid: userId,
+    },
+  });
+  /**
+   *  지우지 말것(mysql 게시글 생성)
+   * 
+  await 디비실행({
+    query: insert,
+    database: "project",
+  });
+   */
+});
 app.get("/", function (req, res) {
   res.send("Hello node.js");
 });
@@ -195,16 +248,3 @@ app.get("/hello", function (req, res) {
 app.listen(4000, function () {
   console.log("Start Node Server!");
 });
-
-function 인서트만들기({ table, data }) {
-  const column = Object.keys(data);
-  const values = Object.values(data);
-
-  if (column.length !== values.length)
-    return throwError("Error Object Key Value");
-
-  const c = column.join(",");
-  const v = values.join("','");
-
-  return `INSERT INTO ${table}(${c}) VALUES ('${v}')`;
-}

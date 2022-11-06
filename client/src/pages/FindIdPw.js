@@ -17,7 +17,11 @@ function FindIdPw() {
     }).then(({ data }) => {
       console.log(data);
       alert(data.answer);
-      if (data.id === "" && data.pw === "") {
+      if (
+        data.id === "" ||
+        data.pw === "" ||
+        data.answer === "유효한 정보를 찾지 못했습니다."
+      ) {
         navigation("/find");
       } else {
         navigation("/");

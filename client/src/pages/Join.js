@@ -18,6 +18,15 @@ function Join() {
 
   const navigation = useNavigate();
   const 확인 = async () => {
+    if (
+      join.id === "" ||
+      join.pw === "" ||
+      join.name === "" ||
+      join.phoneNumber === ""
+    ) {
+      alert("공백을 없게 다시 확인해주세요");
+      return;
+    }
     if (checkPw.pw !== checkPw.checkPw) {
       alert("비밀번호를 다시 확인해주세요");
       return;

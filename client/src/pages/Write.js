@@ -15,7 +15,7 @@ function Write() {
 
   const navigation = useNavigate();
   React.useEffect(() => {
-    console.log(loginUser);
+    // console.log(loginUser);
   }, [loginUser]);
   const 게시글올리기 = async () => {
     if (write.title === "" || write.content === "") {

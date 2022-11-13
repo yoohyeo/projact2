@@ -11,12 +11,12 @@ function Main() {
     navigation("/write");
   };
   const 게시판보러가기 = (event) => {
-    console.log(event.target);
-    navigation("/look");
+    // console.log(event.target);
+    // navigation("/look");
   };
-  React.useEffect(() => {
-    // console.log(loginUser);
-  }, [loginUser]);
+
+  const 게시판수정 = () => {};
+  React.useEffect(() => {}, [loginUser]);
   const 게시판 = async () => {
     await axios({
       url: "http://localhost:4000/main",
@@ -64,6 +64,20 @@ function Main() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td>{item.user}</td>
+                      <button className="btn-c" onClick={게시판수정}>
+                        수정
+                      </button>
+                      <button
+                        className="btn-c"
+                        onClick={(event) => {
+                          const cloneDiary = [...diary].filter((value) => {
+                            return value.seq !== item.seq;
+                          });
+                          setDiary(cloneDiary);
+                        }}
+                      >
+                        삭제
+                      </button>
                     </tr>
                   );
                 })}

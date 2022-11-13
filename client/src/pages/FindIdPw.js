@@ -15,7 +15,7 @@ function FindIdPw() {
         find: find,
       },
     }).then(({ data }) => {
-      console.log(data);
+      // console.log(data);
       alert(data.answer);
       if (
         data.id === "" ||

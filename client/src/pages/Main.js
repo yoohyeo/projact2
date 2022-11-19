@@ -10,9 +10,8 @@ function Main() {
   const 게시판작성 = () => {
     navigation("/write");
   };
-  const 게시판보러가기 = (event) => {
-    // console.log(event.target);
-    // navigation("/look");
+  const 게시판보러가기 = () => {
+    navigation("/look");
   };
 
   const 게시판수정 = () => {};
@@ -56,24 +55,24 @@ function Main() {
               {diary.length > 0 &&
                 diary.map((item, index) => {
                   return (
-                    <tr
-                      key={`diary-${index}`}
-                      onClick={게시판보러가기}
-                      className="article-table"
-                    >
-                      <td>{index + 1}</td>
-                      <td>{item.title}</td>
-                      <td>{item.user}</td>
+                    <tr key={`diary-${index}`} className="article-table">
+                      <td onClick={게시판보러가기}>{index + 1}</td>
+                      <td onClick={게시판보러가기}>{item.title}</td>
+                      <td onClick={게시판보러가기}>{item.user}</td>
                       <button className="btn-c" onClick={게시판수정}>
                         수정
                       </button>
                       <button
                         className="btn-c"
-                        onClick={(event) => {
+                        onClick={async () => {
                           const cloneDiary = [...diary].filter((value) => {
                             return value.seq !== item.seq;
                           });
                           setDiary(cloneDiary);
+                          await axios({
+                            url: "http://localhost:4000/delete",
+                            params: item,
+                          });
                         }}
                       >
                         삭제

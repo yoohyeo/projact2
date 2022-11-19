@@ -27,6 +27,7 @@ DB.add("project", {
   database: "project",
   port: 3306,
 });
+// aws에서 서버 host의 주소로 나중에 바꿔준다.
 
 async function 디비실행(params) {
   const { query, database } = params;
@@ -237,6 +238,15 @@ app.get("/write", async function (req, res) {
     database: "project",
   });
    */
+});
+app.get("/delete", async function (req, res) {
+  const data = await 디비실행({
+    database: "project",
+    query: "SELECT * FROM DIARY",
+  });
+  // console.log(req.query);
+  const seq = req.query.seq;
+  console.log(seq);
 });
 app.get("/", function (req, res) {
   res.send("Hello node.js");

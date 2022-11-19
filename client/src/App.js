@@ -17,6 +17,7 @@ function App() {
   const 자동로그인 = async () => {
     await axios({
       url: "http://localhost:4000/autoLogin",
+      //나중에 localhost대신 서버의 ip를 넣어서 마무리한다.
     }).then(({ data }) => {
       if (!data) {
         // alert("자동로그인실패");

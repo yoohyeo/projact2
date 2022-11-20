@@ -62,6 +62,7 @@ function 인서트만들기({ table, data }) {
 
   return `INSERT INTO ${table}(${c}) VALUES ('${v}')`;
 }
+
 app.get("/autoLogin", (req, res) => {
   res.send(req.session.loginUser);
 });
@@ -232,13 +233,19 @@ app.get("/write", async function (req, res) {
   });
   /**
    *  지우지 말것(mysql 게시글 생성)
-   * 
-  await 디비실행({
-    query: insert,
-    database: "project",
-  });
    */
+  // await 디비실행({
+  //   query: insert,
+  //   database: "project",
+  // });
 });
+
+function 데이터삭제({ table, where }) {
+  const where2 = where.join(" AND ");
+
+  return `DELETE FROM ${table} WHERE ${where2}`;
+}
+
 app.get("/delete", async function (req, res) {
   const data = await 디비실행({
     database: "project",
@@ -246,7 +253,17 @@ app.get("/delete", async function (req, res) {
   });
   // console.log(req.query);
   const seq = req.query.seq;
-  console.log(seq);
+  const delete1 = 데이터삭제({
+    table: "DIARY",
+    where: [`seq = ${seq}`],
+  });
+  /**
+   *  지우지 말것(mysql 게시글 생성)
+   */
+  // await 디비실행({
+  //   query: delete1,
+  //   database: "project",
+  // });
 });
 app.get("/", function (req, res) {
   res.send("Hello node.js");

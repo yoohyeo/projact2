@@ -14,7 +14,6 @@ function Main() {
     navigation("/look");
   };
 
-  const 게시판수정 = () => {};
   React.useEffect(() => {}, [loginUser]);
   const 게시판 = async () => {
     await axios({
@@ -59,9 +58,7 @@ function Main() {
                       <td onClick={게시판보러가기}>{index + 1}</td>
                       <td onClick={게시판보러가기}>{item.title}</td>
                       <td onClick={게시판보러가기}>{item.user}</td>
-                      <button className="btn-c" onClick={게시판수정}>
-                        수정
-                      </button>
+
                       <button
                         className="btn-c"
                         onClick={async () => {

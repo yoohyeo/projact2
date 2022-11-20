@@ -25,7 +25,7 @@ function App() {
       }
 
       setLoginUser(data);
-      navigation("/main");
+      // navigation("/main");
     });
   };
 

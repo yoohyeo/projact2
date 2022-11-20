@@ -12,7 +12,7 @@ function AppIndex() {
       <Route exact path="/find" element={<FindIdPw />} />
       <Route exact path="/main" element={<Main />} />
       <Route exact path="/write" element={<Write />} />
-      <Route exact path="/look" element={<Look />} />
+      <Route exact path="/look/:seq" element={<Look />} />
     </Routes>
   );
 }

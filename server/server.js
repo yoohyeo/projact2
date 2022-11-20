@@ -96,7 +96,6 @@ app.get("/login", async (req, res) => {
       break;
     }
     const findUser = data.find((item) => {
-      // console.log(item);
       return item.id === id && item.pw === pw;
     });
     if (findUser === undefined) {
@@ -196,15 +195,11 @@ app.get("/find", async function (req, res) {
 app.get("/main", async function (req, res) {
   const loginUser = req.session.loginUser;
 
-  // console.log(loginUser);
-
   let sql = `SELECT * FROM diary WHERE userid = '${loginUser.id}' `;
 
   if (loginUser.seq === 1) {
     sql = "SELECT * FROM diary";
   }
-
-  // console.log(sql);
 
   const data = await 디비실행({
     database: "project",
@@ -212,16 +207,48 @@ app.get("/main", async function (req, res) {
   });
   res.send(data);
 });
+
+app.get("/get_write", async function (req, res) {
+  const { seq } = req.query;
+
+  let result = [];
+
+  if (seq) {
+    result = await 디비실행({
+      database: "project",
+      query: `SELECT * FROM DIARY WHERE seq = '${seq}'`,
+    });
+  }
+
+  res.send(result);
+});
+
+function 데이터수정({ table, data }) {
+  const column = Object.keys(data);
+  const values = Object.values(data);
+
+  if (column.length !== values.length)
+    return throwError("Error Object Key Value");
+
+  const c = column.join(",");
+  const v = values.join("','");
+
+  return `UPDATE ${table} SET VALUES ('${v}')`;
+}
+
 app.get("/write", async function (req, res) {
   const data = await 디비실행({
     database: "project",
     query: "SELECT * FROM DIARY",
   });
+  const { seq } = req.query;
   const { write } = req.query;
   const title = write.title;
   const content = write.content;
   const userId = write.userId;
   const user = write.user;
+  if (seq) {
+  }
   const insert = 인서트만들기({
     table: "DIARY",
     data: {
@@ -251,7 +278,6 @@ app.get("/delete", async function (req, res) {
     database: "project",
     query: "SELECT * FROM DIARY",
   });
-  // console.log(req.query);
   const seq = req.query.seq;
   const delete1 = 데이터삭제({
     table: "DIARY",
@@ -264,6 +290,35 @@ app.get("/delete", async function (req, res) {
   //   query: delete1,
   //   database: "project",
   // });
+});
+app.get("/look", async function (req, res) {
+  const data = await 디비실행({
+    database: "project",
+    query: "SELECT * FROM DIARY",
+  });
+  const { seq } = req.query;
+  const result = {
+    seq: "",
+    title: "",
+    content: "",
+    user: "",
+    userId: "",
+    answer: "정보가 없습니다.다시한번 확인해주세요",
+  };
+  data.map((item) => {
+    if (seq == item.seq) {
+      result.title = item.title;
+      result.content = item.content;
+      result.user = item.user;
+      result.userId = item.userid;
+      result.seq = item.seq;
+      result.answer = "확인되었습니다.";
+      return result;
+    }
+    return result;
+  });
+  // console.log(result);
+  res.send(result);
 });
 app.get("/", function (req, res) {
   res.send("Hello node.js");

@@ -10,11 +10,11 @@ function Main() {
   const 게시판작성 = () => {
     navigation("/write");
   };
-  const 게시판보러가기 = () => {
-    navigation("/look");
+  const 게시판보러가기 = async (seq) => {
+    navigation(`/look/${seq}`);
   };
 
-  React.useEffect(() => {}, [loginUser]);
+  // React.useEffect(() => {}, [loginUser]);
   const 게시판 = async () => {
     await axios({
       url: "http://localhost:4000/main",
@@ -24,7 +24,7 @@ function Main() {
   };
   React.useEffect(() => {
     게시판();
-  }, []);
+  }, [loginUser]);
   return (
     <div>
       <div className="user-div">
@@ -41,50 +41,56 @@ function Main() {
         >
           로그아웃
         </button>
-        <div className="main-div">
-          <table className="tg">
-            <thead>
-              <tr>
-                <td className="tg-0pky">번호</td>
-                <td className="tg-0pky">제목</td>
-                <td className="tg-0pky">글쓴이</td>
-              </tr>
-            </thead>
-            <tbody>
-              {diary.length > 0 &&
-                diary.map((item, index) => {
-                  return (
-                    <tr key={`diary-${index}`} className="article-table">
-                      <td onClick={게시판보러가기}>{index + 1}</td>
-                      <td onClick={게시판보러가기}>{item.title}</td>
-                      <td onClick={게시판보러가기}>{item.user}</td>
+      </div>
+      <div className="main-div">
+        <table className="tg">
+          <thead>
+            <tr>
+              <td className="tg-0pky">번호</td>
+              <td className="tg-0pky">제목</td>
+              <td className="tg-0pky">글쓴이</td>
+            </tr>
+          </thead>
+          <tbody>
+            {diary.length > 0 &&
+              diary.map((item, index) => {
+                return (
+                  <tr key={`diary-${index}`} className="article-table">
+                    <td onClick={게시판보러가기.bind(this, item.seq)}>
+                      {index + 1}
+                    </td>
+                    <td onClick={게시판보러가기.bind(this, item.seq)}>
+                      {item.title}
+                    </td>
+                    <td onClick={게시판보러가기.bind(this, item.seq)}>
+                      {item.user}
+                    </td>
 
-                      <button
-                        className="btn-c"
-                        onClick={async () => {
-                          const cloneDiary = [...diary].filter((value) => {
-                            return value.seq !== item.seq;
-                          });
-                          setDiary(cloneDiary);
-                          await axios({
-                            url: "http://localhost:4000/delete",
-                            params: item,
-                          });
-                        }}
-                      >
-                        삭제
-                      </button>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-        <div className="write-div">
-          <button className="btn-b" onClick={게시판작성}>
-            글쓰기
-          </button>
-        </div>
+                    <button
+                      className="btn-c"
+                      onClick={async () => {
+                        const cloneDiary = [...diary].filter((value) => {
+                          return value.seq !== item.seq;
+                        });
+                        setDiary(cloneDiary);
+                        await axios({
+                          url: "http://localhost:4000/delete",
+                          params: item,
+                        });
+                      }}
+                    >
+                      삭제
+                    </button>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
+      <div className="write-div">
+        <button className="btn-b" onClick={게시판작성}>
+          글쓰기
+        </button>
       </div>
     </div>
   );

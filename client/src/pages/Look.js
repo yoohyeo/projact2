@@ -25,7 +25,7 @@ function Look() {
       },
     }).then(({ data }) => {
       setDiary(data);
-      console.log(diary);
+      // console.log(diary);
     });
   };
   React.useEffect(() => {
@@ -61,7 +61,22 @@ function Look() {
           <h3>{diary.content}</h3>
         </div>
         <div className="write-div">
-          <button className="btn-b">수정하기</button>
+          <button
+            className="btn-b"
+            onClick={() => {
+              navigation(`/write/${seq}`);
+            }}
+          >
+            수정하기
+          </button>
+          <button
+            className="btn-b"
+            onClick={() => {
+              navigation("/main");
+            }}
+          >
+            목록보기
+          </button>
         </div>
       </section>
     </div>

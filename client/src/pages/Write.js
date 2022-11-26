@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { StoreContext } from "../App";
 import axios from "axios";
 import qs from "qs";
@@ -13,16 +13,16 @@ function Write() {
     user: loginUser.name,
   });
   const query = qs.parse(window.location.search, {
-    ignoreQueryPrefix: true, // 문자열 맨 앞의 ?를 생력
+    ignoreQueryPrefix: true,
   });
-
+  const { seq } = useParams();
   const navigation = useNavigate();
   React.useEffect(() => {
     (async () => {
       await axios({
         url: "http://localhost:4000/get_write",
         params: {
-          seq: query.seq,
+          seq: seq,
         },
       }).then((response) => {
         if (response.data.length > 0) {
@@ -41,13 +41,10 @@ function Write() {
       url: "http://localhost:4000/write",
       params: {
         write: write,
-        seq: query.seq,
+        seq: seq,
       },
     }).then(navigation("/main"));
   };
-
-  console.log(write);
-
   return (
     <div>
       <div className="user-div">

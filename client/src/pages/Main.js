@@ -10,7 +10,7 @@ function Main() {
   const 게시판작성 = () => {
     navigation("/write");
   };
-  const 게시판보러가기 = async (seq) => {
+  const 게시판보러가기 = (seq) => {
     navigation(`/look/${seq}`);
   };
 
@@ -42,7 +42,7 @@ function Main() {
           로그아웃
         </button>
       </div>
-      <div className="main-div">
+      <div className="main-div1">
         <table className="tg">
           <thead>
             <tr>

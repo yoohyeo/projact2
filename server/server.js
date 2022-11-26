@@ -35,11 +35,13 @@ async function 디비실행(params) {
     DB.getConnection(database, function (err, connection) {
       if (err) {
         console.log("연결 에러 !! ===>", err);
+        return;
       }
 
       connection.query(query, function (err, data) {
         if (err) {
           console.log("쿼리 에러 !! ===>", err);
+          return;
         }
 
         resolve(data);
@@ -157,13 +159,13 @@ app.get("/join", async (req, res) => {
     },
   });
   /**
-   * 아주 중요 없애지 말것(Mysql로 데이터 보내기)
-   *  
-   await 디비실행({
-     query: insert,
-     database: "project",
-   });
-  */
+   * 지우지 말것 아주 중요(Mysql로 데이터 보내기)
+   */
+  await 디비실행({
+    query: insert,
+    database: "project",
+  });
+
   res.send(result);
 });
 app.get("/find", async function (req, res) {
@@ -208,9 +210,25 @@ app.get("/main", async function (req, res) {
   res.send(data);
 });
 
+function 데이터수정({ table, data, where }) {
+  let updateStr = "";
+  let whereStr = "1";
+
+  for (let column in data) {
+    const value = data[column] ? data[column] : "";
+    updateStr += `${column} = '${value}',`;
+  }
+
+  const updateStr1 = updateStr.substring(0, updateStr.length - 1);
+
+  if (where.length > 0) {
+    whereStr = where.join(" AND ");
+  }
+  return `UPDATE ${table} SET ${updateStr1} WHERE ${whereStr}`;
+}
+
 app.get("/get_write", async function (req, res) {
   const { seq } = req.query;
-
   let result = [];
 
   if (seq) {
@@ -222,19 +240,6 @@ app.get("/get_write", async function (req, res) {
 
   res.send(result);
 });
-
-function 데이터수정({ table, data }) {
-  const column = Object.keys(data);
-  const values = Object.values(data);
-
-  if (column.length !== values.length)
-    return throwError("Error Object Key Value");
-
-  const c = column.join(",");
-  const v = values.join("','");
-
-  return `UPDATE ${table} SET VALUES ('${v}')`;
-}
 
 app.get("/write", async function (req, res) {
   const data = await 디비실행({
@@ -248,23 +253,45 @@ app.get("/write", async function (req, res) {
   const userId = write.userId;
   const user = write.user;
   if (seq) {
+    const userId = write.userid;
+    const update = 데이터수정({
+      table: "DIARY",
+      data: {
+        title: title,
+        content: content,
+        userid: userId,
+        user: user,
+      },
+      where: [`seq = ${seq}`],
+    });
+
+    /**
+     *  지우지 말것(mysql 게시글 수정)
+     */
+    await 디비실행({
+      query: update,
+      database: "project",
+    });
+  } else {
+    const insert = 인서트만들기({
+      table: "DIARY",
+      data: {
+        title: title,
+        content: content,
+        user: user,
+        userid: userId,
+      },
+    });
+    /**
+     *  지우지 말것(mysql 게시글 생성)
+     */
+    await 디비실행({
+      query: insert,
+      database: "project",
+    });
   }
-  const insert = 인서트만들기({
-    table: "DIARY",
-    data: {
-      title: title,
-      content: content,
-      user: user,
-      userid: userId,
-    },
-  });
-  /**
-   *  지우지 말것(mysql 게시글 생성)
-   */
-  // await 디비실행({
-  //   query: insert,
-  //   database: "project",
-  // });
+
+  res.send("asdasdsd");
 });
 
 function 데이터삭제({ table, where }) {
